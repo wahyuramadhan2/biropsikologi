@@ -1,319 +1,539 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Biro Psikologi Terpercaya di Surabaya.">
-    <title>Insight Psikologi Surabaya | Mitra Tumbuh Kembang & Organisasi</title>
-    
+    <title>AI Interview Practice | Latihan Interview Kerja IT</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        'brand-blue': '#0f4c81',
-                        'brand-light': '#e6f0fa',
-                        'brand-accent': '#f59e0b',
-                    },
-                    fontFamily: { sans: ['Poppins', 'sans-serif'] }
+                        primary: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',300:'#93c5fd',400:'#60a5fa',500:'#3b82f6',600:'#2563eb',700:'#1d4ed8',800:'#1e40af',900:'#1e3a5f' },
+                        dark: { 700:'#334155', 800:'#1e293b', 900:'#0f172a' }
+                    }
                 }
             }
         }
     </script>
-
     <style>
-        body { overflow-x: hidden; }
-        .hero-bg {
-            background-image: linear-gradient(rgba(15, 76, 129, 0.9), rgba(15, 76, 129, 0.8)), url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover; background-position: center; background-attachment: fixed;
-        }
-        .service-card:hover { transform: translateY(-5px); transition: 0.3s; }
-        
-        /* Modal Animation */
-        .modal { opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; }
-        .modal.active { opacity: 1; visibility: visible; }
-        .modal-content { transform: scale(0.9); transition: all 0.3s ease-in-out; }
-        .modal.active .modal-content { transform: scale(1); }
-
-        /* FAQ Animation */
-        .faq-content { transition: max-height 0.3s ease-out; max-height: 0; overflow: hidden; }
-        .faq-active .faq-content { max-height: 500px; }
-        .faq-icon { transition: transform 0.3s ease; }
-        .faq-active .faq-icon { transform: rotate(180deg); }
+        @keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+        .recording .pulse-ring { animation: pulse-ring 1.5s cubic-bezier(0.215,0.61,0.355,1) infinite; }
+        .recording { background: #ef4444 !important; box-shadow: 0 0 30px rgba(239,68,68,0.5) !important; }
+        .chat-bubble { animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+        .typing-dots span { animation: blink 1.4s infinite both; }
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%,80%,100%{opacity:0} 40%{opacity:1} }
     </style>
 </head>
-<body class="text-gray-700 antialiased bg-gray-50">
+<body class="bg-dark-900 text-white font-sans min-h-screen">
 
-    <header class="fixed w-full bg-white shadow-md z-50 transition-all duration-300" id="navbar">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-2 group">
-                <div class="w-10 h-10 bg-brand-blue text-white rounded flex items-center justify-center text-xl font-bold">I</div>
-                <div class="flex flex-col">
-                    <span class="text-xl font-bold text-brand-blue leading-none">INSIGHT</span>
-                    <span class="text-xs text-gray-500 tracking-widest">PSIKOLOGI SURABAYA</span>
+
+    <!-- LANDING / JOB SELECTION SCREEN -->
+    <div id="landing-screen" class="min-h-screen flex flex-col">
+        <header class="border-b border-white/10 backdrop-blur-md bg-dark-900/80 sticky top-0 z-50">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-microphone-alt text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold leading-none">AI Interview</h1>
+                        <p class="text-xs text-gray-400">Voice Practice</p>
+                    </div>
                 </div>
-            </a>
-            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
-                <a href="#beranda" class="hover:text-brand-blue transition">Beranda</a>
-                <a href="#layanan" class="hover:text-brand-blue transition">Layanan</a>
-                <a href="#tim" class="hover:text-brand-blue transition">Tim Ahli</a>
-                <a href="#faq" class="hover:text-brand-blue transition">FAQ</a>
-                <a href="interview.html" class="hover:text-brand-blue transition"><i class="fas fa-microphone-alt mr-1"></i>AI Interview</a>
-                <a href="https://wa.me/6287763127708" class="bg-brand-blue text-white px-5 py-2.5 rounded-full hover:bg-brand-accent transition shadow-lg">Buat Janji</a>
+                <a href="index.html" class="text-sm text-gray-400 hover:text-white transition">
+                    <i class="fas fa-arrow-left mr-1"></i> Kembali
+                </a>
             </div>
-            <button id="mobile-menu-btn" class="md:hidden text-2xl text-brand-blue"><i class="fas fa-bars"></i></button>
-        </nav>
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t w-full absolute top-full left-0 shadow-lg z-40 p-4 flex flex-col gap-4">
-            <a href="#beranda" class="block font-bold text-brand-blue">Beranda</a>
-            <a href="#layanan" class="block">Layanan</a>
-            <a href="#tim" class="block">Tim Ahli</a>
+        </header>
+
+        <section class="flex-1 flex items-center justify-center px-6 py-12">
+            <div class="max-w-4xl w-full text-center">
+                <div class="mb-8">
+                    <div class="inline-flex items-center gap-2 bg-primary-500/10 border border-primary-500/30 rounded-full px-4 py-2 text-sm text-primary-300 mb-6">
+                        <i class="fas fa-robot"></i>
+                        <span>Powered by Gemini 2.5 Flash</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                        Latihan Interview Kerja<br>dengan AI Interviewer
+                    </h2>
+                    <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+                        Pilih bidang pekerjaan IT yang kamu inginkan, lalu mulai sesi interview menggunakan suara. AI akan bertanya dan memberikan feedback secara real-time.
+                    </p>
+                </div>
+
+                <div class="mt-10">
+                    <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6">Pilih Bidang Pekerjaan</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="job-grid"></div>
+                </div>
+
+                <div class="mt-10">
+                    <button id="start-btn" disabled onclick="startInterview()"
+                        class="px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold rounded-xl text-lg shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed disabled:shadow-none">
+                        <i class="fas fa-play mr-2"></i> Mulai Interview
+                    </button>
+                    <p id="selected-job-text" class="text-sm text-gray-500 mt-3"></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+    <!-- INTERVIEW SCREEN -->
+    <div id="interview-screen" class="min-h-screen flex-col hidden">
+        <header class="border-b border-white/10 bg-dark-900/95 backdrop-blur-md sticky top-0 z-50">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                    <div>
+                        <h1 class="text-sm font-bold" id="interview-title">Interview Session</h1>
+                        <p class="text-xs text-gray-400" id="interview-role">-</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-xs text-gray-400" id="question-counter">Pertanyaan 1/7</span>
+                    <button onclick="endInterview()" class="text-sm bg-red-500/20 text-red-400 px-4 py-2 rounded-lg hover:bg-red-500/30 transition">
+                        <i class="fas fa-stop mr-1"></i> Akhiri
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto px-6 py-8" id="chat-container" style="height: calc(100vh - 180px);">
+            <div class="max-w-3xl mx-auto space-y-6" id="chat-messages"></div>
         </div>
-    </header>
 
-    <section id="beranda" class="hero-bg min-h-screen flex items-center pt-20 text-white relative">
-        <div class="container mx-auto px-6 py-20 flex flex-col md:flex-row items-center">
-            <div class="md:w-3/5 space-y-6">
-                <span class="bg-brand-accent text-white px-3 py-1 rounded text-xs font-bold tracking-wide uppercase inline-block mb-2">#1 Biro Psikologi Surabaya</span>
-                <h1 class="text-4xl md:text-6xl font-bold leading-tight">Temukan Potensi Terbaik <br> Diri & Organisasi Anda.</h1>
-                <p class="text-lg md:text-xl text-gray-200 leading-relaxed max-w-2xl">Layanan asesmen psikologis, konseling profesional, dan pengembangan SDM berbasis data yang akurat.</p>
-                <div class="flex gap-4 pt-4">
-                    <a href="#layanan" class="px-8 py-3 bg-brand-accent text-white font-bold rounded shadow-lg hover:bg-yellow-600 transition">Lihat Layanan</a>
-                    <a href="https://wa.me/6287763127708" class="px-8 py-3 border-2 border-white text-white font-bold rounded hover:bg-white hover:text-brand-blue transition">Konsultasi</a>
+        <div class="border-t border-white/10 bg-dark-800 p-6">
+            <div class="max-w-3xl mx-auto flex flex-col items-center gap-4">
+                <div id="voice-status" class="text-sm text-gray-400">
+                    <i class="fas fa-info-circle mr-1"></i> Tekan tombol mikrofon untuk menjawab
                 </div>
+                <div class="relative flex items-center justify-center">
+                    <div class="pulse-ring absolute w-16 h-16 rounded-full bg-primary-500 opacity-0"></div>
+                    <button id="mic-btn" onclick="toggleRecording()"
+                        class="w-16 h-16 rounded-full bg-primary-600 hover:bg-primary-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-primary-500/30 transition-all duration-300 relative z-10">
+                        <i class="fas fa-microphone" id="mic-icon"></i>
+                    </button>
+                </div>
+                <div id="transcript-preview" class="text-sm text-gray-500 italic text-center max-w-lg min-h-[20px]"></div>
             </div>
-        </div>
-    </section>
-
-    <section class="bg-white py-10 -mt-10 relative z-10 shadow-md mx-6 md:mx-20 rounded-lg border-b-4 border-brand-accent">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
-                <div><h3 class="text-3xl font-bold text-brand-blue"><span class="counter" data-target="10">0</span>+</h3><p class="text-sm text-gray-500">Tahun Pengalaman</p></div>
-                <div><h3 class="text-3xl font-bold text-brand-blue"><span class="counter" data-target="5000">0</span>+</h3><p class="text-sm text-gray-500">Peserta Tes</p></div>
-                <div><h3 class="text-3xl font-bold text-brand-blue"><span class="counter" data-target="50">0</span>+</h3><p class="text-sm text-gray-500">Klien Perusahaan</p></div>
-                <div><h3 class="text-3xl font-bold text-brand-blue"><span class="counter" data-target="15">0</span></h3><p class="text-sm text-gray-500">Psikolog Associate</p></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="layanan" class="py-24 bg-gray-50">
-        <div class="container mx-auto px-6">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <h2 class="text-brand-blue font-bold text-sm tracking-wider uppercase mb-2">Area Keahlian</h2>
-                <h3 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Layanan Komprehensif</h3>
-                
-                <div class="flex flex-wrap justify-center gap-3 mt-6">
-                    <button onclick="filterServices('all')" class="px-4 py-2 rounded-full bg-brand-blue text-white text-sm hover:bg-brand-accent transition">Semua</button>
-                    <button onclick="filterServices('industri')" class="px-4 py-2 rounded-full bg-white border border-gray-300 text-sm hover:border-brand-blue transition">Industri</button>
-                    <button onclick="filterServices('klinis')" class="px-4 py-2 rounded-full bg-white border border-gray-300 text-sm hover:border-brand-blue transition">Klinis</button>
-                    <button onclick="filterServices('pendidikan')" class="px-4 py-2 rounded-full bg-white border border-gray-300 text-sm hover:border-brand-blue transition">Pendidikan</button>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="service-grid">
-                
-                <div class="service-card bg-white rounded-xl p-8 shadow-lg border-b-4 border-brand-blue" data-category="industri">
-                    <div class="w-14 h-14 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center text-2xl mb-6"><i class="fas fa-building"></i></div>
-                    <h4 class="text-xl font-bold mb-3 text-gray-800">Psikologi Industri</h4>
-                    <p class="text-sm text-gray-500 mb-6">Rekrutmen, Assessment Center, Training SDM.</p>
-                    <button onclick="openModal('Industri', 'Layanan B2B untuk perusahaan meliputi Psikotes Massal, Wawancara BEI, LGD, dan Pelatihan Softskill.')" class="text-brand-blue font-bold text-sm hover:underline">Info Lengkap →</button>
-                </div>
-
-                <div class="service-card bg-white rounded-xl p-8 shadow-lg border-b-4 border-green-500" data-category="klinis">
-                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-2xl mb-6"><i class="fas fa-heartbeat"></i></div>
-                    <h4 class="text-xl font-bold mb-3 text-gray-800">Psikologi Klinis</h4>
-                    <p class="text-sm text-gray-500 mb-6">Konseling Dewasa, Keluarga, & Pasangan.</p>
-                    <button onclick="openModal('Klinis', 'Konseling tatap muka atau online untuk masalah depresi, kecemasan, trauma, dan konflik rumah tangga.')" class="text-green-600 font-bold text-sm hover:underline">Info Lengkap →</button>
-                </div>
-
-                <div class="service-card bg-white rounded-xl p-8 shadow-lg border-b-4 border-purple-500" data-category="pendidikan">
-                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-2xl mb-6"><i class="fas fa-graduation-cap"></i></div>
-                    <h4 class="text-xl font-bold mb-3 text-gray-800">Pendidikan & Anak</h4>
-                    <p class="text-sm text-gray-500 mb-6">Tes IQ, Minat Bakat, Tumbuh Kembang.</p>
-                    <button onclick="openModal('Pendidikan', 'Layanan tes IQ (WISC/Binet), Tes Minat Bakat Penjurusan, dan Deteksi Dini Tumbuh Kembang Anak.')" class="text-purple-600 font-bold text-sm hover:underline">Info Lengkap →</button>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section id="tim" class="py-24 bg-white">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-900">Tim Profesional</h2>
-                    <p class="text-gray-500 mt-2">10 Psikolog & Psikiater Berpengalaman.</p>
-                </div>
-                <input type="text" id="searchInput" onkeyup="searchTeam()" placeholder="Cari nama psikolog..." class="mt-4 md:mt-0 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-brand-blue w-full md:w-64">
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="team-container">
-                <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Dra. Maya S.</h4>
-                    <p class="text-xs text-brand-blue">Psikolog Klinis</p>
-                </div>
-                <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Budi S., M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Psikolog Industri</p>
-                </div>
-                <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Citra A., M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Psikolog Anak</p>
-                </div>
-                <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">dr. Hendra, Sp.KJ</h4>
-                    <p class="text-xs text-green-600 font-bold">Psikiater</p>
-                </div>
-                 <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Rina W., M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Psikolog Remaja</p>
-                </div>
-                 <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Sari Indah, M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Psikolog Pendidikan</p>
-                </div>
-                 <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Dedi K., M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Assessment Center</p>
-                </div>
-                 <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Fanny R., M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Psikolog Klinis</p>
-                </div>
-                <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Agus P., M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Konselor Adiksi</p>
-                </div>
-                <div class="team-member bg-gray-50 rounded-xl p-6 text-center hover:shadow-md transition">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
-                    <h4 class="font-bold text-gray-900">Bella S., M.Psi.</h4>
-                    <p class="text-xs text-brand-blue">Associate Psikolog</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="faq" class="py-20 bg-white">
-        <div class="container mx-auto px-6 max-w-4xl">
-            <div class="text-center mb-12"><h2 class="text-3xl font-bold text-gray-900">FAQ</h2></div>
-            <div class="space-y-4">
-                <div class="border border-gray-200 rounded-lg faq-item cursor-pointer" onclick="toggleFaq(this)">
-                    <div class="p-5 flex justify-between items-center bg-gray-50 rounded-t-lg"><h4 class="font-bold text-gray-700">Berapa lama hasil tes keluar?</h4><i class="fas fa-chevron-down text-gray-400 faq-icon"></i></div>
-                    <div class="faq-content bg-white"><div class="p-5 text-gray-600 text-sm border-t">Hasil tes keluar 3-4 hari kerja. Ada layanan Express 1x24 jam.</div></div>
-                </div>
-                <div class="border border-gray-200 rounded-lg faq-item cursor-pointer" onclick="toggleFaq(this)">
-                    <div class="p-5 flex justify-between items-center bg-gray-50 rounded-t-lg"><h4 class="font-bold text-gray-700">Bisa konseling online?</h4><i class="fas fa-chevron-down text-gray-400 faq-icon"></i></div>
-                    <div class="faq-content bg-white"><div class="p-5 text-gray-600 text-sm border-t">Ya, via Zoom atau Google Meet.</div></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-gray-900 text-gray-400 pt-16 pb-8 text-sm">
-        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-8">
-            <div><h3 class="text-white text-lg font-bold mb-4">Insight Surabaya</h3><p>Mitra Psikologi Terpercaya.</p></div>
-            <div><h3 class="text-white font-bold mb-4">Menu</h3><ul class="space-y-2"><li><a href="#beranda">Beranda</a></li><li><a href="#layanan">Layanan</a></li><li><a href="#tim">Tim</a></li></ul></div>
-            <div><h3 class="text-white font-bold mb-4">Layanan</h3><ul class="space-y-2">
-                <li><button onclick="openModal('Minat Bakat', 'Tes Penjurusan Sekolah & Kuliah.')" class="hover:text-white">Tes Minat Bakat</button></li>
-                <li><button onclick="openModal('IQ Anak', 'Tes WISC/Binet untuk anak.')" class="hover:text-white">Tes IQ Anak</button></li>
-            </ul></div>
-            <div><h3 class="text-white font-bold mb-4">Kontak</h3><ul class="space-y-2"><li>Graha Pena, Surabaya</li><li>+62 877 6312 7708</li></ul></div>
-        </div>
-        <div class="text-center border-t border-gray-800 pt-8 text-xs">&copy; 2025 Insight Psikologi.</div>
-    </footer>
-
-    <div id="detailModal" class="modal fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-        <div class="modal-content bg-white rounded-xl shadow-2xl max-w-md w-full p-6 relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
-            <h3 id="modalTitle" class="text-2xl font-bold text-brand-blue mb-2">Judul</h3>
-            <p id="modalDesc" class="text-gray-600 mb-6">Deskripsi...</p>
-            <a href="https://wa.me/6287763127708" class="block w-full bg-brand-blue text-white text-center py-3 rounded-lg font-bold hover:bg-brand-accent transition">Chat WhatsApp</a>
         </div>
     </div>
 
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="min-h-screen flex flex-col items-center justify-center px-6 py-12 hidden">
+        <div class="max-w-2xl w-full mx-auto text-center">
+            <div class="mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-check-circle text-4xl text-white"></i>
+                </div>
+                <h2 class="text-3xl font-bold mb-2">Interview Selesai!</h2>
+                <p class="text-gray-400">Berikut adalah evaluasi dari AI Interviewer</p>
+            </div>
+            <div id="result-content" class="bg-dark-800 rounded-2xl p-8 text-left border border-white/10 space-y-4"></div>
+            <button onclick="resetInterview()" class="mt-8 px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white font-bold rounded-xl transition">
+                <i class="fas fa-redo mr-2"></i> Mulai Lagi
+            </button>
+        </div>
+    </div>
+
+
     <script>
-        // 1. Mobile Menu
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
-        btn.addEventListener('click', () => { menu.classList.toggle('hidden'); });
+    // ============ CONFIG ============
+    const GEMINI_API_KEY = 'AIzaSyDDRWUrA6NKxT636eEptu4iT8gqC-0-syM';
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-        // 2. Navbar Scroll
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { navbar.classList.add('bg-white/95', 'shadow-lg', 'py-2'); navbar.classList.remove('py-4'); } 
-            else { navbar.classList.remove('bg-white/95', 'shadow-lg', 'py-2'); navbar.classList.add('py-4'); }
+    const JOB_ROLES = [
+        { id: 'frontend', title: 'Frontend Developer', icon: 'fa-code', desc: 'React, Vue, Angular, CSS', color: 'from-blue-500 to-cyan-500' },
+        { id: 'backend', title: 'Backend Developer', icon: 'fa-server', desc: 'Node.js, Python, Java, Go', color: 'from-green-500 to-emerald-500' },
+        { id: 'fullstack', title: 'Fullstack Developer', icon: 'fa-layer-group', desc: 'Frontend + Backend', color: 'from-purple-500 to-pink-500' },
+        { id: 'mobile', title: 'Mobile Developer', icon: 'fa-mobile-alt', desc: 'React Native, Flutter, Swift', color: 'from-orange-500 to-red-500' },
+        { id: 'devops', title: 'DevOps Engineer', icon: 'fa-cloud', desc: 'CI/CD, Docker, Kubernetes', color: 'from-yellow-500 to-orange-500' },
+        { id: 'data', title: 'Data Scientist', icon: 'fa-chart-bar', desc: 'ML, Python, SQL, Analytics', color: 'from-indigo-500 to-purple-500' },
+        { id: 'qa', title: 'QA Engineer', icon: 'fa-bug', desc: 'Testing, Automation, Selenium', color: 'from-rose-500 to-pink-500' },
+        { id: 'uiux', title: 'UI/UX Designer', icon: 'fa-paint-brush', desc: 'Figma, Research, Prototyping', color: 'from-teal-500 to-cyan-500' },
+        { id: 'cybersecurity', title: 'Cybersecurity Analyst', icon: 'fa-shield-alt', desc: 'Security, Pentesting, SOC', color: 'from-red-600 to-rose-500' },
+    ];
+
+    // ============ STATE ============
+    let selectedJob = null;
+    let conversationHistory = [];
+    let questionCount = 0;
+    const MAX_QUESTIONS = 7;
+    let isRecording = false;
+    let recognition = null;
+    let synthesis = window.speechSynthesis;
+
+    // ============ INIT ============
+    function init() {
+        renderJobGrid();
+        setupSpeechRecognition();
+    }
+
+    function renderJobGrid() {
+        const grid = document.getElementById('job-grid');
+        grid.innerHTML = JOB_ROLES.map(job => `
+            <div onclick="selectJob('${job.id}')" id="job-${job.id}"
+                class="cursor-pointer p-5 rounded-xl border border-white/10 bg-dark-800 hover:border-primary-500/50 hover:bg-dark-700 transition-all duration-300 text-left group">
+                <div class="w-12 h-12 rounded-lg bg-gradient-to-br ${job.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                    <i class="fas ${job.icon} text-white text-lg"></i>
+                </div>
+                <h4 class="font-bold text-white text-sm">${job.title}</h4>
+                <p class="text-xs text-gray-500 mt-1">${job.desc}</p>
+            </div>
+        `).join('');
+    }
+
+    function selectJob(jobId) {
+        selectedJob = JOB_ROLES.find(j => j.id === jobId);
+        // Update UI
+        document.querySelectorAll('#job-grid > div').forEach(el => {
+            el.classList.remove('border-primary-500', 'bg-primary-500/10');
+            el.classList.add('border-white/10');
         });
+        const el = document.getElementById(`job-${jobId}`);
+        el.classList.add('border-primary-500', 'bg-primary-500/10');
+        el.classList.remove('border-white/10');
+        // Enable start button
+        document.getElementById('start-btn').disabled = false;
+        document.getElementById('selected-job-text').textContent = `Posisi dipilih: ${selectedJob.title}`;
+    }
 
-        // 3. Counter Animation
-        const counters = document.querySelectorAll('.counter');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const counter = entry.target;
-                    const target = +counter.getAttribute('data-target');
-                    const increment = target / 100;
-                    let current = 0;
-                    const update = () => {
-                        current += increment;
-                        if (current < target) { counter.innerText = Math.ceil(current); requestAnimationFrame(update); } 
-                        else { counter.innerText = target; }
-                    };
-                    update();
-                    observer.unobserve(counter);
+
+    // ============ SPEECH RECOGNITION ============
+    function setupSpeechRecognition() {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert('Browser kamu tidak mendukung Speech Recognition. Gunakan Google Chrome.');
+            return;
+        }
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'id-ID';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            let finalTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript;
+                } else {
+                    interimTranscript += transcript;
                 }
-            });
-        }, { threshold: 0.5 });
-        counters.forEach(c => observer.observe(c));
-
-        // 4. Filter Layanan
-        function filterLayanan(cat) {
-            const items = document.querySelectorAll('.service-card');
-            items.forEach(item => {
-                if (cat === 'all' || item.dataset.category === cat) { item.parentElement.style.display = 'block'; } 
-                else { item.parentElement.style.display = 'none'; }
-            });
-        }
-
-        // 5. Search Tim
-        function searchTeam() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const members = document.querySelectorAll('.team-member');
-            members.forEach(member => {
-                const name = member.querySelector('h4').innerText.toLowerCase();
-                if (name.includes(input)) { member.style.display = 'block'; } 
-                else { member.style.display = 'none'; }
-            });
-        }
-
-        // 6. Modal Logic
-        function openModal(title, desc) {
-            if(title) {
-                document.getElementById('modalTitle').innerText = title;
-                document.getElementById('modalDesc').innerText = desc;
             }
-            document.getElementById('detailModal').classList.add('active');
+            document.getElementById('transcript-preview').textContent = interimTranscript || finalTranscript;
+            if (finalTranscript) {
+                document.getElementById('transcript-preview').dataset.final = 
+                    (document.getElementById('transcript-preview').dataset.final || '') + ' ' + finalTranscript;
+            }
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            if (event.error === 'no-speech') {
+                document.getElementById('voice-status').innerHTML = '<i class="fas fa-exclamation-triangle mr-1 text-yellow-400"></i> Tidak terdengar suara. Coba lagi.';
+            }
+            stopRecording();
+        };
+
+        recognition.onend = () => {
+            if (isRecording) {
+                // Auto-restart if still supposed to be recording
+                try { recognition.start(); } catch(e) {}
+            }
+        };
+    }
+
+    function toggleRecording() {
+        if (isRecording) {
+            stopRecording();
+            // Send the recorded message
+            const finalText = document.getElementById('transcript-preview').dataset.final || 
+                             document.getElementById('transcript-preview').textContent;
+            if (finalText && finalText.trim()) {
+                sendUserMessage(finalText.trim());
+            }
+        } else {
+            startRecording();
         }
-        function closeModal() {
-            document.getElementById('detailModal').classList.remove('active');
+    }
+
+    function startRecording() {
+        if (!recognition) return;
+        isRecording = true;
+        document.getElementById('transcript-preview').textContent = 'Mendengarkan...';
+        document.getElementById('transcript-preview').dataset.final = '';
+        document.getElementById('mic-btn').classList.add('recording');
+        document.getElementById('mic-icon').classList.remove('fa-microphone');
+        document.getElementById('mic-icon').classList.add('fa-stop');
+        document.getElementById('voice-status').innerHTML = '<i class="fas fa-circle text-red-500 mr-1 animate-pulse"></i> Merekam... tekan lagi untuk mengirim';
+        try { recognition.start(); } catch(e) {}
+    }
+
+    function stopRecording() {
+        isRecording = false;
+        document.getElementById('mic-btn').classList.remove('recording');
+        document.getElementById('mic-icon').classList.remove('fa-stop');
+        document.getElementById('mic-icon').classList.add('fa-microphone');
+        document.getElementById('voice-status').innerHTML = '<i class="fas fa-info-circle mr-1"></i> Tekan tombol mikrofon untuk menjawab';
+        try { recognition.stop(); } catch(e) {}
+    }
+
+
+    // ============ TEXT-TO-SPEECH ============
+    function speakText(text) {
+        synthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'id-ID';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        // Try to get Indonesian voice
+        const voices = synthesis.getVoices();
+        const idVoice = voices.find(v => v.lang.startsWith('id'));
+        if (idVoice) utterance.voice = idVoice;
+        synthesis.speak(utterance);
+    }
+
+    // ============ INTERVIEW FLOW ============
+    async function startInterview() {
+        if (!selectedJob) return;
+        // Switch screens
+        document.getElementById('landing-screen').classList.add('hidden');
+        document.getElementById('interview-screen').classList.remove('hidden');
+        document.getElementById('interview-screen').classList.add('flex');
+        document.getElementById('interview-title').textContent = `Interview: ${selectedJob.title}`;
+        document.getElementById('interview-role').textContent = selectedJob.desc;
+
+        questionCount = 0;
+        conversationHistory = [];
+        document.getElementById('chat-messages').innerHTML = '';
+
+        // Start with AI greeting
+        await getAIResponse(true);
+    }
+
+    function addMessage(role, text) {
+        const container = document.getElementById('chat-messages');
+        const isAI = role === 'ai';
+        const bubble = document.createElement('div');
+        bubble.className = `chat-bubble flex ${isAI ? 'justify-start' : 'justify-end'}`;
+        bubble.innerHTML = `
+            <div class="max-w-[80%] ${isAI ? 'bg-dark-700 border border-white/10' : 'bg-primary-600'} rounded-2xl px-5 py-4 ${isAI ? 'rounded-tl-sm' : 'rounded-tr-sm'}">
+                ${isAI ? '<div class="flex items-center gap-2 mb-2"><div class="w-6 h-6 bg-primary-500/20 rounded-full flex items-center justify-center"><i class="fas fa-robot text-xs text-primary-400"></i></div><span class="text-xs font-bold text-primary-400">AI Interviewer</span></div>' : ''}
+                <p class="text-sm leading-relaxed ${isAI ? 'text-gray-200' : 'text-white'}">${text}</p>
+            </div>
+        `;
+        container.appendChild(bubble);
+        // Scroll to bottom
+        const chatContainer = document.getElementById('chat-container');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+        const container = document.getElementById('chat-messages');
+        const bubble = document.createElement('div');
+        bubble.id = 'typing-indicator';
+        bubble.className = 'chat-bubble flex justify-start';
+        bubble.innerHTML = `
+            <div class="bg-dark-700 border border-white/10 rounded-2xl rounded-tl-sm px-5 py-4">
+                <div class="typing-dots flex gap-1">
+                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                    <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+                </div>
+            </div>
+        `;
+        container.appendChild(bubble);
+        const chatContainer = document.getElementById('chat-container');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+        const el = document.getElementById('typing-indicator');
+        if (el) el.remove();
+    }
+
+    async function sendUserMessage(text) {
+        addMessage('user', text);
+        document.getElementById('transcript-preview').textContent = '';
+        document.getElementById('transcript-preview').dataset.final = '';
+        
+        conversationHistory.push({ role: 'user', parts: [{ text }] });
+        
+        await getAIResponse(false);
+    }
+
+
+    // ============ GEMINI API ============
+    async function getAIResponse(isFirstMessage) {
+        addTypingIndicator();
+
+        const systemPrompt = `Kamu adalah seorang interviewer profesional di perusahaan teknologi besar di Indonesia. 
+Kamu sedang menginterview kandidat untuk posisi ${selectedJob.title} (${selectedJob.desc}).
+
+ATURAN:
+- Gunakan bahasa Indonesia yang profesional namun ramah
+- Tanya SATU pertanyaan pada satu waktu
+- Pertanyaan harus relevan dengan posisi ${selectedJob.title}
+- Campurkan pertanyaan teknis dan behavioral
+- Berikan respons singkat terhadap jawaban kandidat sebelum bertanya selanjutnya
+- Total pertanyaan dalam interview ini adalah ${MAX_QUESTIONS} pertanyaan
+- Saat ini adalah pertanyaan ke-${questionCount + 1}
+
+${isFirstMessage ? 'Mulai dengan memperkenalkan diri sebagai interviewer, sebutkan posisi yang dilamar, lalu berikan pertanyaan pembuka yang ringan (misalnya minta kandidat memperkenalkan diri).' : ''}
+${questionCount >= MAX_QUESTIONS - 1 ? 'Ini adalah pertanyaan terakhir. Setelah kandidat menjawab, tutup interview dengan ucapan terima kasih.' : ''}
+${questionCount >= MAX_QUESTIONS ? 'Interview sudah selesai. Berikan ucapan penutup singkat dan terima kasih kepada kandidat.' : ''}`;
+
+        const messages = [
+            { role: 'user', parts: [{ text: systemPrompt }] },
+            ...conversationHistory
+        ];
+
+        // If first message, add a trigger
+        if (isFirstMessage) {
+            messages.push({ role: 'user', parts: [{ text: 'Mulai interview sekarang.' }] });
         }
 
-        // 7. FAQ Toggle
-        function toggleFaq(el) {
-            el.classList.toggle('faq-active');
+        try {
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: messages,
+                    generationConfig: {
+                        temperature: 0.8,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 500,
+                    }
+                })
+            });
+
+            const data = await response.json();
+            removeTypingIndicator();
+
+            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                const aiText = data.candidates[0].content.parts[0].text;
+                addMessage('ai', aiText);
+                speakText(aiText);
+                conversationHistory.push({ role: 'model', parts: [{ text: aiText }] });
+                questionCount++;
+                document.getElementById('question-counter').textContent = `Pertanyaan ${Math.min(questionCount, MAX_QUESTIONS)}/${MAX_QUESTIONS}`;
+
+                // Check if interview should end
+                if (questionCount > MAX_QUESTIONS) {
+                    setTimeout(() => endInterview(), 3000);
+                }
+            } else {
+                const errorMsg = data.error ? `Error: ${data.error.message}` : 'Maaf, terjadi kesalahan. Silakan coba lagi.';
+                addMessage('ai', errorMsg);
+                console.error('API Error:', JSON.stringify(data));
+            }
+        } catch (error) {
+            removeTypingIndicator();
+            addMessage('ai', 'Koneksi terputus. Pastikan internet kamu stabil.');
+            console.error('Fetch error:', error);
         }
+    }
+
+
+    // ============ END & RESULT ============
+    async function endInterview() {
+        synthesis.cancel();
+        stopRecording();
+
+        // Switch to result screen
+        document.getElementById('interview-screen').classList.add('hidden');
+        document.getElementById('interview-screen').classList.remove('flex');
+        document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('result-screen').classList.add('flex');
+
+        // Get evaluation from AI
+        const evalPrompt = `Berdasarkan sesi interview berikut untuk posisi ${selectedJob.title}, berikan evaluasi singkat dalam format:
+
+1. **Skor Keseluruhan**: (1-10)/10
+2. **Kelebihan**: (2-3 poin kelebihan kandidat)
+3. **Area Perbaikan**: (2-3 area yang perlu ditingkatkan)
+4. **Tips**: (1-2 saran untuk interview berikutnya)
+
+Berikan evaluasi yang konstruktif dan membangun dalam bahasa Indonesia.`;
+
+        const messages = [
+            ...conversationHistory,
+            { role: 'user', parts: [{ text: evalPrompt }] }
+        ];
+
+        document.getElementById('result-content').innerHTML = '<div class="text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i> Menganalisis performa interview...</div>';
+
+        try {
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: messages,
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 1000,
+                    }
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                const evalText = data.candidates[0].content.parts[0].text;
+                document.getElementById('result-content').innerHTML = formatEvaluation(evalText);
+            } else {
+                document.getElementById('result-content').innerHTML = '<p class="text-gray-400">Tidak dapat menghasilkan evaluasi. Coba lagi.</p>';
+            }
+        } catch (error) {
+            document.getElementById('result-content').innerHTML = '<p class="text-red-400">Error saat mengambil evaluasi.</p>';
+        }
+    }
+
+    function formatEvaluation(text) {
+        // Convert markdown-like formatting to HTML
+        return text
+            .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>')
+            .replace(/\n/g, '<br>')
+            .replace(/(\d+\.)/g, '<span class="text-primary-400 font-bold">$1</span>');
+    }
+
+    function resetInterview() {
+        selectedJob = null;
+        conversationHistory = [];
+        questionCount = 0;
+        document.getElementById('result-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('flex');
+        document.getElementById('landing-screen').classList.remove('hidden');
+        document.getElementById('start-btn').disabled = true;
+        document.getElementById('selected-job-text').textContent = '';
+        document.querySelectorAll('#job-grid > div').forEach(el => {
+            el.classList.remove('border-primary-500', 'bg-primary-500/10');
+            el.classList.add('border-white/10');
+        });
+    }
+
+    // ============ VOICE LOADING ============
+    // Ensure voices are loaded
+    if (synthesis.onvoiceschanged !== undefined) {
+        synthesis.onvoiceschanged = () => {};
+    }
+
+    // Init on page load
+    document.addEventListener('DOMContentLoaded', init);
     </script>
-
 </body>
 </html>
