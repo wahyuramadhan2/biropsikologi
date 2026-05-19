@@ -150,7 +150,17 @@
 
     <script>
     // ============ CONFIG ============
-    const GEMINI_API_KEY = 'AIzaSyB8zv6CfNjYLZmbGj3OtoBEs327DxSzyIg';
+    // Ganti API key kamu di sini
+    const GEMINI_API_KEY = localStorage.getItem('gemini_api_key') || '';
+    
+    // Tampilkan prompt input API key jika belum diset
+    if (!GEMINI_API_KEY) {
+        const key = prompt('Masukkan Gemini API Key kamu:');
+        if (key) {
+            localStorage.setItem('gemini_api_key', key);
+            location.reload();
+        }
+    }
     const MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest'];
     function getApiUrl(model) {
         return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
