@@ -151,7 +151,7 @@
     <script>
     // ============ CONFIG ============
     const GEMINI_API_KEY = 'AIzaSyDDRWUrA6NKxT636eEptu4iT8gqC-0-syM';
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GEMINI_API_KEY}`;
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
     const JOB_ROLES = [
         { id: 'frontend', title: 'Frontend Developer', icon: 'fa-code', desc: 'React, Vue, Angular, CSS', color: 'from-blue-500 to-cyan-500' },
@@ -437,8 +437,9 @@ ${questionCount >= MAX_QUESTIONS ? 'Interview sudah selesai. Berikan ucapan penu
                     setTimeout(() => endInterview(), 3000);
                 }
             } else {
-                addMessage('ai', 'Maaf, terjadi kesalahan. Silakan coba lagi.');
-                console.error('API Error:', data);
+                const errorMsg = data.error ? `Error: ${data.error.message}` : 'Maaf, terjadi kesalahan. Silakan coba lagi.';
+                addMessage('ai', errorMsg);
+                console.error('API Error:', JSON.stringify(data));
             }
         } catch (error) {
             removeTypingIndicator();
