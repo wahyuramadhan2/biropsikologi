@@ -151,7 +151,10 @@
     <script>
     // ============ CONFIG ============
     const GEMINI_API_KEY = 'AIzaSyB8zv6CfNjYLZmbGj3OtoBEs327DxSzyIg';
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    const MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    function getApiUrl(model) {
+        return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+    }
 
     const JOB_ROLES = [
         { id: 'frontend', title: 'Frontend Developer', icon: 'fa-code', desc: 'React, Vue, Angular, CSS', color: 'from-blue-500 to-cyan-500' },
@@ -297,12 +300,16 @@
         synthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'id-ID';
-        utterance.rate = 1.0;
-        utterance.pitch = 1.0;
-        // Try to get Indonesian voice
+        utterance.rate = 1.2;
+        utterance.pitch = 1.1;
+
+        // Pick the best available voice (prefer Google/natural voices)
         const voices = synthesis.getVoices();
-        const idVoice = voices.find(v => v.lang.startsWith('id'));
-        if (idVoice) utterance.voice = idVoice;
+        const preferred = voices.find(v => v.lang.startsWith('id') && v.name.toLowerCase().includes('google'));
+        const fallback = voices.find(v => v.lang.startsWith('id'));
+        if (preferred) utterance.voice = preferred;
+        else if (fallback) utterance.voice = fallback;
+
         synthesis.speak(utterance);
     }
 
@@ -406,46 +413,70 @@ ${questionCount >= MAX_QUESTIONS ? 'Interview sudah selesai. Berikan ucapan penu
             messages.push({ role: 'user', parts: [{ text: 'Mulai interview sekarang.' }] });
         }
 
-        try {
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: messages,
-                    generationConfig: {
-                        temperature: 0.8,
-                        topK: 40,
-                        topP: 0.95,
-                        maxOutputTokens: 500,
+        const requestBody = {
+            contents: messages,
+            generationConfig: {
+                temperature: 0.8,
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 500,
+            }
+        };
+
+        // Try each model until one works
+        for (let i = 0; i < MODELS.length; i++) {
+            try {
+                const response = await fetch(getApiUrl(MODELS[i]), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+
+                if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                    removeTypingIndicator();
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    addMessage('ai', aiText);
+                    speakText(aiText);
+                    conversationHistory.push({ role: 'model', parts: [{ text: aiText }] });
+                    questionCount++;
+                    document.getElementById('question-counter').textContent = `Pertanyaan ${Math.min(questionCount, MAX_QUESTIONS)}/${MAX_QUESTIONS}`;
+
+                    if (questionCount > MAX_QUESTIONS) {
+                        setTimeout(() => endInterview(), 3000);
                     }
-                })
-            });
-
-            const data = await response.json();
-            removeTypingIndicator();
-
-            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-                const aiText = data.candidates[0].content.parts[0].text;
-                addMessage('ai', aiText);
-                speakText(aiText);
-                conversationHistory.push({ role: 'model', parts: [{ text: aiText }] });
-                questionCount++;
-                document.getElementById('question-counter').textContent = `Pertanyaan ${Math.min(questionCount, MAX_QUESTIONS)}/${MAX_QUESTIONS}`;
-
-                // Check if interview should end
-                if (questionCount > MAX_QUESTIONS) {
-                    setTimeout(() => endInterview(), 3000);
+                    return; // Success, stop trying
                 }
-            } else {
+
+                // If error is overload/rate-limit, try next model
+                if (data.error && (data.error.code === 429 || data.error.code === 503 || data.error.message.includes('high demand'))) {
+                    console.warn(`Model ${MODELS[i]} unavailable, trying next...`);
+                    continue;
+                }
+
+                // Other error, show it
+                removeTypingIndicator();
                 const errorMsg = data.error ? `Error: ${data.error.message}` : 'Maaf, terjadi kesalahan. Silakan coba lagi.';
                 addMessage('ai', errorMsg);
                 console.error('API Error:', JSON.stringify(data));
+                return;
+
+            } catch (error) {
+                if (i < MODELS.length - 1) {
+                    console.warn(`Fetch failed for ${MODELS[i]}, trying next...`);
+                    continue;
+                }
+                removeTypingIndicator();
+                addMessage('ai', 'Koneksi terputus. Pastikan internet kamu stabil.');
+                console.error('Fetch error:', error);
+                return;
             }
-        } catch (error) {
-            removeTypingIndicator();
-            addMessage('ai', 'Koneksi terputus. Pastikan internet kamu stabil.');
-            console.error('Fetch error:', error);
         }
+
+        // All models failed
+        removeTypingIndicator();
+        addMessage('ai', 'Semua model sedang sibuk. Coba lagi dalam beberapa saat.');
     }
 
 
@@ -478,22 +509,34 @@ Berikan evaluasi yang konstruktif dan membangun dalam bahasa Indonesia.`;
         document.getElementById('result-content').innerHTML = '<div class="text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i> Menganalisis performa interview...</div>';
 
         try {
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: messages,
-                    generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 1000,
+            let evalData = null;
+            for (let i = 0; i < MODELS.length; i++) {
+                try {
+                    const response = await fetch(getApiUrl(MODELS[i]), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: messages,
+                            generationConfig: {
+                                temperature: 0.7,
+                                maxOutputTokens: 1000,
+                            }
+                        })
+                    });
+                    const data = await response.json();
+                    if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                        evalData = data;
+                        break;
                     }
-                })
-            });
+                    if (data.error && (data.error.code === 429 || data.error.code === 503 || (data.error.message && data.error.message.includes('high demand')))) {
+                        continue;
+                    }
+                    break;
+                } catch(e) { continue; }
+            }
 
-            const data = await response.json();
-
-            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-                const evalText = data.candidates[0].content.parts[0].text;
+            if (evalData && evalData.candidates && evalData.candidates[0] && evalData.candidates[0].content) {
+                const evalText = evalData.candidates[0].content.parts[0].text;
                 document.getElementById('result-content').innerHTML = formatEvaluation(evalText);
             } else {
                 document.getElementById('result-content').innerHTML = '<p class="text-gray-400">Tidak dapat menghasilkan evaluasi. Coba lagi.</p>';
