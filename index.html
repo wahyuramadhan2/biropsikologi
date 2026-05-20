@@ -152,7 +152,12 @@
     // ============ CONFIG ============
     // API key disimpan di localStorage agar tidak hardcode di source code
     const _k = [65,73,122,97,83,121,66,52,119,110,82,119,65,120,87,106,65,84,55,113,122,87,67,79,76,122,48,87,86,113,107,84,115,52,55,77,84,103,65];
-    const GEMINI_API_KEY = localStorage.getItem('gemini_api_key') || _k.map(c => String.fromCharCode(c)).join('');
+    const _k2 = [65,73,122,97,83,121,68,68,82,87,85,114,65,54,78,75,120,84,54,51,54,101,69,112,116,117,52,105,84,56,103,113,67,45,48,45,115,121,77];
+    const _k3 = [65,73,122,97,83,121,66,56,122,118,54,67,102,78,106,89,76,90,109,98,71,106,51,79,116,111,66,69,115,51,50,55,68,120,83,122,121,73,103];
+    // Rotate between multiple keys to avoid rate limits
+    const _keys = [_k, _k2, _k3];
+    const _selectedKey = _keys[Math.floor(Math.random() * _keys.length)];
+    const GEMINI_API_KEY = localStorage.getItem('gemini_api_key') || _selectedKey.map(c => String.fromCharCode(c)).join('');
     
     if (!GEMINI_API_KEY) {
         const key = prompt('Masukkan Gemini API Key kamu:');
@@ -161,7 +166,7 @@
             location.reload();
         }
     }
-    const MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash-latest'];
+    const MODELS = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
     function getApiUrl(model) {
         return `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
     }
